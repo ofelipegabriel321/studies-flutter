@@ -12,6 +12,47 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String _infoText = "Informe seus dados!";
+
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+
+  // GlobalKey: uma chave que é única em todo o aplicativo.
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void _resetFields() {
+    weightController.text = "";
+    heightController.text = "";
+    // Para remover a mensagem de erro ao resetar:
+    _formKey = GlobalKey<FormState>();
+    // Como o weightController e o heightController são controllers, não precisamos dar o setState.
+    setState(() {
+      _infoText = "Informe seus dados!";
+    });
+  }
+
+  void _calculate() {
+    setState(() {
+      double weight = double.parse(weightController.text);
+      double height = double.parse(heightController.text) / 100;
+      double imc = weight / (height * height);
+
+      if (imc < 18.5) {
+        _infoText = "Abaixo do peso (${imc.toStringAsPrecision(3)})";
+      } else if (imc < 25) {
+        _infoText = "Peso ideal (${imc.toStringAsPrecision(3)})";
+      } else if (imc < 30) {
+        _infoText = "Levemente acima do peso (${imc.toStringAsPrecision(3)})";
+      } else if (imc < 35) {
+        _infoText = "Obesidade grau I (${imc.toStringAsPrecision(3)})";
+      } else if (imc < 40) {
+        _infoText = "Obesidade grau II (${imc.toStringAsPrecision(3)})";
+      } else if (imc >= 40) {
+        _infoText = "Obesidade grau III (${imc.toStringAsPrecision(3)})";
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //   Scaffold: implementa a estrutura de layout visual básica do material design,
@@ -28,7 +69,7 @@ class _HomeState extends State<Home> {
               // Icon: widget de ícone gráfico desenhado.
               // Icons: widget de ícone.
               icon: Icon(Icons.refresh),
-              onPressed: () {},
+              onPressed: _resetFields,
             ),
           ],
         ),
@@ -36,65 +77,85 @@ class _HomeState extends State<Home> {
         //   SingleChildScrollView: garante que o container de um filho seja rolável quando a
         // tela estiver muito pequena para ele (na direção da rolagem).
         body: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Icon(
-                Icons.person_outline,
-                size: 120.0,
-                color: Colors.green,
-              ),
-              // TextField: campo de texto do material design.
-              TextField(
-                // TextInputType: tipo de informação do input.
-                keyboardType: TextInputType.number,
-                //   InputDecoration: border, labels, icons e os styles usados ​​para
-                // decorar um TextField do material design.
-                decoration: InputDecoration(
-                    labelText: "Peso (kg)",
-                    // TextStyle: define o size, position e color do texto.
-                    labelStyle: TextStyle(color: Colors.green)),
-                // TextAlign: tipo de alinhamento a ser aplicado em um texto.
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.green, fontSize: 25.0),
-              ),
-              TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    labelText: "Altura (cm)",
-                    labelStyle: TextStyle(color: Colors.green)),
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.green, fontSize: 25.0),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Container(
-                  // padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  //   Tentei fazer isso, mas isso geraria um padding no child em relação ao container, ou seja,
-                  // o child ia ocupar 30 desse 50 de altura, mas eu quero é que o padding seja aplicado para
-                  // fora do container.
-                  height: 50.0,
-                  //   RaisedButton: classe que define um botão com um texto.“botão elevado”: aqui queremos
-                  // passar a sensação de ter elevação no botão em relação ao seu pai, por isso a cor do
-                  // conteúdo do botão é escurecida e ele possui uma sombra no entorno.
-                  child: RaisedButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Calcular",
-                      style: TextStyle(color: Colors.white, fontSize: 25.0),
-                    ),
+            padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+            // Form:
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Icon(
+                    Icons.person_outline,
+                    size: 120.0,
                     color: Colors.green,
                   ),
-                ),
+                  // [CHANGED] TextField: campo de texto do material design.
+                  // TextFormField: campo de texto de um formulário do material design.
+                  TextFormField(
+                    // TextInputType: tipo de informação do input.
+                    keyboardType: TextInputType.number,
+                    //   InputDecoration: border, labels, icons e os styles usados ​​para
+                    // decorar um TextField do material design.
+                    decoration: InputDecoration(
+                        labelText: "Peso (kg)",
+                        // TextStyle: define o size, position e color do texto.
+                        labelStyle: TextStyle(color: Colors.green)),
+                    // TextAlign: tipo de alinhamento a ser aplicado em um texto.
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.green, fontSize: 25.0),
+                    controller: weightController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "insira seu Peso!";
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        labelText: "Altura (cm)",
+                        labelStyle: TextStyle(color: Colors.green)),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.green, fontSize: 25.0),
+                    controller: heightController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "insira sua Altura!";
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Container(
+                      // padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      //   Tentei fazer isso, mas isso geraria um padding no child em relação ao container, ou seja,
+                      // o child ia ocupar 30 desse 50 de altura, mas eu quero é que o padding seja aplicado para
+                      // fora do container.
+                      height: 50.0,
+                      //   RaisedButton: classe que define um botão com um texto.“botão elevado”: aqui queremos
+                      // passar a sensação de ter elevação no botão em relação ao seu pai, por isso a cor do
+                      // conteúdo do botão é escurecida e ele possui uma sombra no entorno.
+                      child: RaisedButton(
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            _calculate();
+                          }
+                        },
+                        child: Text(
+                          "Calcular",
+                          style: TextStyle(color: Colors.white, fontSize: 25.0),
+                        ),
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    _infoText,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.green, fontSize: 25.0),
+                  )
+                ],
               ),
-              Text(
-                "Info",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.green, fontSize: 25.0),
-              )
-            ],
-          ),
-        ));
+            )));
   }
 }
