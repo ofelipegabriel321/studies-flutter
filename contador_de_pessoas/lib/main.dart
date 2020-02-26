@@ -16,7 +16,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  static List<String> _possibleInfoTexts = ["Pode Entrar!", "Todos já saíram!", "Lotado!"];
+  static List<String> _possibleInfoTexts = [
+    "Pode Entrar!",
+    "Todos já saíram!",
+    "Lotado!"
+  ];
 
   int _people = 0;
   String _infoText = _possibleInfoTexts[0];
@@ -24,17 +28,17 @@ class _HomeState extends State<Home> {
   void _changePeople(int delta) {
     // setState: executa uma função e depois atualiza o que for necessário na tela.
     setState(() {
-        if (_people <= 0 && delta == -1){
-          _infoText = _possibleInfoTexts[1];
-        } else if (_people >= 10 && delta == 1) {
-          _infoText = _possibleInfoTexts[2];
-        } else {
-          _people += delta;
-          _infoText = _possibleInfoTexts[0];
-        }
+      if (_people <= 0 && delta == -1) {
+        _infoText = _possibleInfoTexts[1];
+      } else if (_people >= 10 && delta == 1) {
+        _infoText = _possibleInfoTexts[2];
+      } else {
+        _people += delta;
+        _infoText = _possibleInfoTexts[0];
+      }
     });
   }
-  
+
   // build: função sempre chamada quando queremos modificar algo no layout.
   @override
   Widget build(BuildContext context) {
