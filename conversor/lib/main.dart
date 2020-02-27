@@ -19,20 +19,20 @@ main() async {
       home: Home(),
       // ThemeData: define características de um tema.
       theme: ThemeData(
-          hintColor: Colors.amber,
-          primaryColor: Colors.white,
-          // InputDecorationTheme: define a aparência dos InputDecoration.
-          inputDecorationTheme: InputDecorationTheme(
-            enabledBorder:
-                // OutlineInputBorder: desenha um retângulo arredondado em torno do contêiner de InputDecorator.
-                // BorderSide: um lado de uma borda de uma caixa.
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
-            focusedBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-            focusColor: Colors.amber,
-          ),
-          cursorColor: Colors.amber,
-          ),
+        hintColor: Colors.amber,
+        primaryColor: Colors.white,
+        // InputDecorationTheme: define a aparência dos InputDecoration.
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder:
+              // OutlineInputBorder: desenha um retângulo arredondado em torno do contêiner de InputDecorator.
+              // BorderSide: um lado de uma borda de uma caixa.
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          focusColor: Colors.amber,
+        ),
+        cursorColor: Colors.amber,
+      ),
     ),
   );
 }
@@ -105,33 +105,12 @@ class _HomeState extends State<Home> {
                         size: 150.0,
                         color: Colors.amber,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                            labelText: "Reais",
-                            labelStyle: TextStyle(color: Colors.amber),
-                            border: OutlineInputBorder(),
-                            prefixText: "R\$"),
-                        style: TextStyle(color: Colors.amber, fontSize: 25.0),
-                      ),
+                      buildTextField("Reais", "R\$"),
                       // Divider: linha horizontal fina, com preenchimento de ambos os lados.
                       Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                            labelText: "Dólares",
-                            labelStyle: TextStyle(color: Colors.amber),
-                            border: OutlineInputBorder(),
-                            prefixText: "US\$"),
-                        style: TextStyle(color: Colors.amber, fontSize: 25.0),
-                      ),
+                      buildTextField("Dólares", "US\$"),
                       Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                            labelText: "Euros",
-                            labelStyle: TextStyle(color: Colors.amber),
-                            border: OutlineInputBorder(),
-                            prefixText: "€"),
-                        style: TextStyle(color: Colors.amber, fontSize: 25.0),
-                      )
+                      buildTextField("Euros", "€"),
                     ],
                   ),
                 );
@@ -141,4 +120,15 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+Widget buildTextField(String label, String prefix) {
+  return TextField(
+    decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: Colors.amber),
+        border: OutlineInputBorder(),
+        prefixText: prefix),
+    style: TextStyle(color: Colors.amber, fontSize: 25.0),
+  );
 }
